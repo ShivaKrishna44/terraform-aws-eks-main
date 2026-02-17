@@ -15,7 +15,7 @@ variable "common_tags" {
 }
 
 variable "domain_name" {
-    default = "shivakrishna.shop"
+    default = "vosukula.online"
 }
 
 variable "zone_id" {
