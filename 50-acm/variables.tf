@@ -15,7 +15,7 @@ variable "common_tags" {
 }
 
 variable "domain_name" {
-    default = "daws82s.online"
+    default = "shivakrishna.shop"
 }
 
 variable "zone_id" {
