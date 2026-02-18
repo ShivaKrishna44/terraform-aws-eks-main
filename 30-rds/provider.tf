@@ -11,6 +11,8 @@ terraform {
     key    = "cva_expense-dev-eks-rds" # you should have unique keys with in the bucket, same key should not be used in other repos or tf projects
     region = "us-east-1"
     dynamodb_table = "cva-tf-remote-state-dev1"
+    use_lockfile = true
+    skip_final_snapshot = true
   }
 }
 

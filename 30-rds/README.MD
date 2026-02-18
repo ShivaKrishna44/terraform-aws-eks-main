@@ -49,17 +49,19 @@ mkdir: cannot create directory ‘/root’: Permission denied
 
 
 
-$ terraform apply -lock=false
-data.aws_ssm_parameter.database_subnet_group_name: Reading...
+$ terraform apply -auto-approve -lock=false
 data.aws_ssm_parameter.public_subnet_ids: Reading...
 module.db.module.db_instance.data.aws_partition.current: Reading...
-data.aws_ssm_parameter.mysql_sg_id: Reading...
 module.db.module.db_instance.data.aws_iam_policy_document.enhanced_monitoring: Reading...
-module.db.module.db_instance.data.aws_iam_policy_document.enhanced_monitoring: Read complete after 0s [id=76086537]
+data.aws_ssm_parameter.mysql_sg_id: Reading...
+data.aws_ssm_parameter.database_subnet_group_name: Reading...
 module.db.module.db_instance.data.aws_partition.current: Read complete after 0s [id=aws]
-data.aws_ssm_parameter.mysql_sg_id: Read complete after 0s [id=/expense/dev/mysql_sg_id]
+module.db.module.db_parameter_group.aws_db_parameter_group.this[0]: Refreshing state... [id=expense-dev-20260217145041215200000001]
+module.db.module.db_option_group.aws_db_option_group.this[0]: Refreshing state... [id=expense-dev-20260217145041215200000002]
+module.db.module.db_instance.data.aws_iam_policy_document.enhanced_monitoring: Read complete after 0s [id=76086537]
 data.aws_ssm_parameter.database_subnet_group_name: Read complete after 0s [id=/expense/dev/database_subnet_group_name]
 data.aws_ssm_parameter.public_subnet_ids: Read complete after 0s [id=/expense/dev/public_subnet_ids]
+data.aws_ssm_parameter.mysql_sg_id: Read complete after 0s [id=/expense/dev/mysql_sg_id]
 
 Terraform used the selected providers to generate the following execution
 plan. Resource actions are indicated with the following symbols:
@@ -76,7 +78,7 @@ Terraform will perform the following actions:
       + records         = (known after apply)
       + ttl             = 5
       + type            = "CNAME"
-      + zone_id         = "Z021448929NMXW4P65UQE"
+      + zone_id         = "Z10366773K51S184GSJVZ"
     }
 
   # module.db.module.db_instance.aws_db_instance.this[0] will be created
@@ -118,6 +120,7 @@ Terraform will perform the following actions:
       + license_model                         = (known after apply)
       + listener_endpoint                     = (known after apply)
       + maintenance_window                    = (known after apply)
+      + manage_master_user_password           = true
       + master_user_secret                    = (known after apply)
       + master_user_secret_kms_key_id         = (known after apply)
       + max_allocated_storage                 = 0
@@ -126,8 +129,8 @@ Terraform will perform the following actions:
       + multi_az                              = false
       + nchar_character_set_name              = (known after apply)
       + network_type                          = (known after apply)
-      + option_group_name                     = (known after apply)
-      + parameter_group_name                  = (known after apply)
+      + option_group_name                     = "expense-dev-20260217145041215200000002"
+      + parameter_group_name                  = "expense-dev-20260217145041215200000001"
       + password_wo                           = (write-only attribute)
       + performance_insights_enabled          = false
       + performance_insights_kms_key_id       = (known after apply)
@@ -161,82 +164,30 @@ Terraform will perform the following actions:
       + username                              = "root"
       + vpc_security_group_ids                = (sensitive value)
     }
-
-  # module.db.module.db_option_group.aws_db_option_group.this[0] will be created
-  + resource "aws_db_option_group" "this" {
-      + arn                      = (known after apply)
-      + engine_name              = "mysql"
-      + id                       = (known after apply)
-      + major_engine_version     = "8.0"
-      + name                     = (known after apply)
-      + name_prefix              = "expense-dev-"
-      + option_group_description = "expense-dev option group"
-      + region                   = "us-east-1"
-      + skip_destroy             = false
-      + tags                     = {
-          + "Environment" = "dev"
-          + "Name"        = "expense-dev"
-          + "Project"     = "expense"
-          + "Terraform"   = "true"
+  # module.db.module.db_instance.aws_db_instance.this[0] has changed
+  ~ resource "aws_db_instance" "this" {
+      + domain_dns_ips                        = []
+        id                                    = "db-CAGXUJDLDLBWPN5445HH4N2AXM"
+        tags                                  = {
+            "Environment" = "dev"
+            "Name"        = "expense-dev"
+            "Project"     = "expense"
+            "Terraform"   = "true"
         }
-      + tags_all                 = {
-          + "Environment" = "dev"
-          + "Name"        = "expense-dev"
-          + "Project"     = "expense"
-          + "Terraform"   = "true"
-        }
-
-      + option {
-          + db_security_group_memberships  = []
-          + option_name                    = "MARIADB_AUDIT_PLUGIN"
-          + vpc_security_group_memberships = []
-            # (1 unchanged attribute hidden)
-
-          + option_settings {
-              + name  = "SERVER_AUDIT_EVENTS"
-              + value = "CONNECT"
-            }
-          + option_settings {
-              + name  = "SERVER_AUDIT_FILE_ROTATIONS"
-              + value = "37"
-            }
-        }
+        # (73 unchanged attributes hidden)
     }
+Terraform will perform the following actions:
 
-  # module.db.module.db_parameter_group.aws_db_parameter_group.this[0] will be created
-  + resource "aws_db_parameter_group" "this" {
-      + arn          = (known after apply)
-      + description  = "expense-dev parameter group"
-      + family       = "mysql8.0"
-      + id           = (known after apply)
-      + name         = (known after apply)
-      + name_prefix  = "expense-dev-"
-      + region       = "us-east-1"
-      + skip_destroy = false
-      + tags         = {
-          + "Environment" = "dev"
-          + "Name"        = "expense-dev"
-          + "Project"     = "expense"
-          + "Terraform"   = "true"
-        }
-      + tags_all     = {
-          + "Environment" = "dev"
-          + "Name"        = "expense-dev"
-          + "Project"     = "expense"
-          + "Terraform"   = "true"
-        }
-
-      + parameter {
-          + apply_method = "immediate"
-          + name         = "character_set_client"
-          + value        = "utf8mb4"
-        }
-      + parameter {
-          + apply_method = "immediate"
-          + name         = "character_set_server"
-          + value        = "utf8mb4"
-        }
+  # aws_route53_record.www-dev will be created
+  + resource "aws_route53_record" "www-dev" {
+      + allow_overwrite = true
+      + fqdn            = (known after apply)
+      + id              = (known after apply)
+      + name            = "mysql-dev.vosukula.online"
+      + records         = [
+          + "expense-dev.c0l24goa6r56.us-east-1.rds.amazonaws.com",
+        ]
+      + ttl             = 5
+      + type            = "CNAME"
+      + zone_id         = "Z10366773K51S184GSJVZ"
     }
-
-Plan: 4 to add, 0 to change, 0 to destroy.
-

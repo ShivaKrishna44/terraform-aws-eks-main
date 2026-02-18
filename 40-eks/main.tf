@@ -1,6 +1,7 @@
 resource "aws_key_pair" "eks" {
   key_name   = "expense-eks"
-  public_key = file("~/.ssh/eks.pub")
+  #generate ssh-keygen -t rsa -b 4096 -f ~/.ssh/eks -C "eks-key"
+  public_key = file(pathexpand("~/.ssh/eks.pub"))
 }
 
 module "eks" {
